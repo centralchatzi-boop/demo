@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💝 Veux-tu être ma Valentine?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Caveat', cursive;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Coeurs flottants en arrière-plan */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.6;
+            animation: float 10s infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            position: relative;
+            z-index: 10;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: scale(0.8) translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 48px;
+            color: #e91e63;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .gif-container {
+            margin: 30px 0;
+            position: relative;
+            display: inline-block;
+        }
+
+        .gif-container img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: 'Caveat', cursive;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-size: 24px;
+            padding: 20px 40px;
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #666;
+            font-size: 18px;
+            padding: 15px 30px;
+            transition: all 0.3s ease;
+        }
+
+        #noBtn:hover {
+            background: linear-gradient(135deg, #fed6e3 0%, #a8edea 100%);
+        }
+
+        #noBtn.shake {
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px) rotate(-5deg); }
+            20%, 40%, 60%, 80% { transform: translateX(10px) rotate(5deg); }
+        }
+
+        #noBtn.jump {
+            animation: jump 0.5s ease;
+        }
+
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+
+        #noBtn.spin {
+            animation: spin 0.6s ease;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f5576c;
+            position: absolute;
+            animation: confettiFall 3s linear forwards;
+            z-index: 100;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 60px;
+            border-radius: 30px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+            animation: successPop 0.6s ease-out forwards;
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+            }
+            70% {
+                transform: translate(-50%, -50%) scale(1.1) rotate(10deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+        }
+
+        .success-message h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 56px;
+            color: #e91e63;
+            margin-bottom: 20px;
+        }
+
+        .success-message p {
+            font-size: 32px;
+            color: #666;
+        }
+
+        /* Overlay sombre pour le succès */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Indicateur de musique */
+        .music-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #e91e63;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+        }
+
+        .music-indicator:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.05);
+        }
+
+        .music-indicator.playing {
+            animation: pulse-music 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-music {
+            0%, 100% { box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3); }
+            50% { box-shadow: 0 4px 20px rgba(233, 30, 99, 0.6); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Indicateur de musique -->
+    <div class="music-indicator" id="musicIndicator" onclick="toggleMusic()">
+        🔇 Clique pour la musique
+    </div>
+
+    <!-- Coeurs flottants -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <!-- Overlay pour le succès -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Container principal -->
+    <div class="container" id="mainContainer">
+        <h1>💝 Veux-tu être ma Valentine? 💝</h1>
+        
+        <div class="gif-container">
+            <img id="gifImage" src="https://cdn.discordapp.com/attachments/909499331894210601/1467934205832069311/image0.jpg?ex=69822fc3&is=6980de43&hm=8bc9d2c5ae6dd4b469446f856cd4ffe79e8d4bfe7cdafa0d16c9706fc6f85b4f&" alt="Premier gif">
+        </div>
+
+        <div class="buttons-container">
+            <button id="yesBtn">OUI! 💕</button>
+            <button id="noBtn">Non...</button>
+        </div>
+    </div>
+
+    <!-- Musique de fond romantique -->
+    <audio id="romanticMusic" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_4a56a97841.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Sons de célébration combinés -->
+    <audio id="celebrationSound1">
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_c8c6c91ff2.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="celebrationSound2">
+        <source src="https://cdn.pixabay.com/download/audio/2021/08/09/audio_bb630cc098.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="celebrationSound3">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Configuration
+        const noMessages = [
+            "Non...",
+            "Tu es sûre? 🥺",
+            "Allez... s'il te plaît? 🙏",
+            "Je vais pleurer... 😢",
+            "Mon cœur se brise... 💔",
+            "Je t'en supplie! 😭",
+            "PENSEEE À MOIII!! 😱",
+            "JE NE SURVIVRAI PAS!! 💀",
+            "C'EST MA DERNIÈRE CHANCE!! 🆘",
+            "TU ES MA SEULE RAISON DE VIVRE!! ❤️‍🔥"
+        ];
+
+        const sadGifs = [
+            "https://cdn.discordapp.com/attachments/909499331894210601/1467934205832069311/image0.jpg?ex=69822fc3&is=6980de43&hm=8bc9d2c5ae6dd4b469446f856cd4ffe79e8d4bfe7cdafa0d16c9706fc6f85b4f&",
+            "https://media.giphy.com/media/L95W4wv8nnb9K/giphy.gif",
+            "https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif",
+            "https://media.giphy.com/media/14aUO0Mf7dWDXW/giphy.gif",
+            "https://media.giphy.com/media/10tIjpzIu8fe0/giphy.gif",
+            "https://media.giphy.com/media/kyLYXonQYYfwYDIeZl/giphy.gif",
+            "https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif",
+            "https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif"
+        ];
+
+        const happyGif = "https://cdn.discordapp.com/attachments/909499331894210601/1467934989105758280/image0.jpg?ex=6982307e&is=6980defe&hm=78d7b4feb2318d8c8d1017b1fa5a58cea50af2c9e76f800d3781b21a2b0a56c6&";
+
+        let noCount = 0;
+        let yesFontSize = 24;
+        let musicEnabled = false;
+
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const gifImage = document.getElementById('gifImage');
+        const mainContainer = document.getElementById('mainContainer');
+        const overlay = document.getElementById('overlay');
+        const musicIndicator = document.getElementById('musicIndicator');
+        const romanticMusic = document.getElementById('romanticMusic');
+        const celebrationSound1 = document.getElementById('celebrationSound1');
+        const celebrationSound2 = document.getElementById('celebrationSound2');
+        const celebrationSound3 = document.getElementById('celebrationSound3');
+
+        // Fonction pour activer/désactiver la musique
+        function toggleMusic() {
+            if (!musicEnabled) {
+                romanticMusic.play().then(() => {
+                    musicEnabled = true;
+                    musicIndicator.innerHTML = '🎵 Musique romantique';
+                    musicIndicator.classList.add('playing');
+                }).catch(err => {
+                    console.log('Erreur lecture musique:', err);
+                    musicIndicator.innerHTML = '🔇 Clique à nouveau';
+                });
+            } else {
+                romanticMusic.pause();
+                musicEnabled = false;
+                musicIndicator.innerHTML = '🔇 Musique désactivée';
+                musicIndicator.classList.remove('playing');
+            }
+        }
+
+        // Démarrer automatiquement la musique au premier clic
+        let firstInteraction = true;
+        document.body.addEventListener('click', function() {
+            if (firstInteraction) {
+                firstInteraction = false;
+                if (!musicEnabled) {
+                    toggleMusic();
+                }
+            }
+        }, { once: true });
+
+        // Créer les coeurs flottants
+        function createFloatingHearts() {
+            const container = document.getElementById('floatingHearts');
+            const hearts = ['💕', '💖', '💗', '💝', '💘', '❤️'];
+            
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                container.appendChild(heart);
+            }
+        }
+
+        // Fonction pour créer des confettis
+        function createConfetti() {
+            const colors = ['#f5576c', '#f093fb', '#4facfe', '#43e97b', '#ffd89b'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Créer un son de clic avec Web Audio API
+        function playClickSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.1);
+            } catch(e) {
+                console.log('Web Audio API non disponible');
+            }
+        }
+
+        // Bouton NON
+        noBtn.addEventListener('click', () => {
+            if (noCount < noMessages.length - 1) {
+                noCount++;
+            }
+
+            // Son de clic
+            playClickSound();
+
+            // Changer le texte
+            noBtn.textContent = noMessages[noCount];
+
+            // Changer le GIF
+            const gifIndex = Math.min(noCount, sadGifs.length - 1);
+            gifImage.src = sadGifs[gifIndex];
+
+            // Agrandir le bouton OUI
+            yesFontSize += 8;
+            const padding = 20 + (noCount * 5);
+            yesBtn.style.fontSize = yesFontSize + 'px';
+            yesBtn.style.padding = padding + 'px ' + (padding * 2) + 'px';
+
+            // Rétrécir le bouton NON
+            const noFontSize = Math.max(12, 18 - (noCount * 1));
+            const noPadding = Math.max(8, 15 - noCount);
+            noBtn.style.fontSize = noFontSize + 'px';
+            noBtn.style.padding = noPadding + 'px ' + (noPadding * 2) + 'px';
+
+            // Animations variées
+            const animations = ['shake', 'jump', 'spin'];
+            const randomAnim = animations[Math.floor(Math.random() * animations.length)];
+            
+            noBtn.classList.remove('shake', 'jump', 'spin');
+            setTimeout(() => {
+                noBtn.classList.add(randomAnim);
+            }, 10);
+
+            // Faire trembler légèrement le container
+            mainContainer.style.animation = 'none';
+            setTimeout(() => {
+                mainContainer.style.animation = 'shake 0.3s ease';
+            }, 10);
+
+            // Plus on clique, plus le bouton NON devient désespéré (changement de couleur)
+            if (noCount > 5) {
+                noBtn.style.background = 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)';
+                noBtn.style.color = '#d32f2f';
+            }
+            if (noCount > 8) {
+                noBtn.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%)';
+                noBtn.style.color = 'white';
+                noBtn.style.animation = 'wiggle 0.5s ease-in-out infinite';
+            }
+        });
+
+        // Bouton OUI
+        yesBtn.addEventListener('click', () => {
+            // Arrêter la musique de fond
+            romanticMusic.pause();
+            romanticMusic.currentTime = 0;
+            
+            // Jouer TOUS les sons de célébration en même temps pour plus d'impact
+            // Précharger et jouer immédiatement
+            celebrationSound1.volume = 0.8;
+            celebrationSound2.volume = 0.7;
+            celebrationSound3.volume = 0.6;
+            
+            // Lancer les 3 sons avec un léger décalage pour un effet superposé
+            celebrationSound1.play().then(() => {
+                console.log('Son 1 joué');
+            }).catch(e => {
+                console.log('Erreur son 1:', e);
+                // Fallback: essayer de rejouer
+                celebrationSound1.load();
+                celebrationSound1.play();
+            });
+            
+            setTimeout(() => {
+                celebrationSound2.play().then(() => {
+                    console.log('Son 2 joué');
+                }).catch(e => {
+                    console.log('Erreur son 2:', e);
+                    celebrationSound2.load();
+                    celebrationSound2.play();
+                });
+            }, 200);
+            
+            setTimeout(() => {
+                celebrationSound3.play().then(() => {
+                    console.log('Son 3 joué');
+                }).catch(e => {
+                    console.log('Erreur son 3:', e);
+                    celebrationSound3.load();
+                    celebrationSound3.play();
+                });
+            }, 400);
+
+            // Mettre à jour l'indicateur
+            musicIndicator.innerHTML = '🎉 Célébration !';
+            musicIndicator.classList.add('playing');
+
+            // Créer des confettis
+            createConfetti();
+
+            // Afficher l'overlay
+            overlay.classList.add('show');
+
+            // Changer le GIF
+            gifImage.src = happyGif;
+
+            // Message de succès
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.innerHTML = `
+                <h2>YAAAAY!! 🎉</h2>
+                <p>Tu as fait le bon choix! 💕</p>
+                <div style="margin-top: 30px;">
+                    <img src="${happyGif}" style="width: 250px; border-radius: 20px;">
+                </div>
+            `;
+            document.body.appendChild(successDiv);
+
+            // Continuer les confettis
+            setInterval(createConfetti, 1000);
+        });
+
+        // Initialiser les coeurs flottants
+        createFloatingHearts();
+        
+        // Précharger tous les sons au chargement de la page
+        window.addEventListener('load', () => {
+            romanticMusic.load();
+            celebrationSound1.load();
+            celebrationSound2.load();
+            celebrationSound3.load();
+        });
+    </script>
+</body>
+</html>
